@@ -1,62 +1,95 @@
 <odoo>
-    <!-- explicit list view definition -->
-    
-    <!-- <record model="ir.ui.view" id="open_list">
-      <field name="name">Cursos</field>
-      <field name="model">open.course</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="description"/>
-        </tree>
-      </field>
-    </record> -->
-    
+  <!-- explicit list view definition -->
+  <record model="ir.ui.view" id="course_form_view">
+    <field name="name">course.form</field>
+    <field name="model">open.course</field>
+    <field name="arch" type="xml">
+      <form string="Course Formulario">
+        <sheet>
+          <group col="4">
+            <!-- divide el ancho total en n col iguales-->
+            <group col="6" colspan="3">
+              <!--colspan =3 indica que de las 4 col indicadas en el group externo, -->
+              <field name="name" colspan="3"/>
+              <field name="description" colspan="3"/>
+              <field name="description" colspan="6"/>
+            </group>
+          </group>
+          
+          <group col="4">
+            <group col="2" colspan="1">
+              <field name="name"/>
+              <field name="description"/>
+            </group>
+          </group>
 
-    <!-- actions opening views on models -->
-    
-    <record id="course_list_action" model="ir.actions.act_window" >
-      <field name="name">Courses</field>
-      <field name="res_model">open.course</field>
-      <field name="view_type">form</field>
-      <field name="view_mode">tree,form</field>
-      <field name="help" type="html">
-        <p class="oe_view_nocontent_create">Create the first course</p>
-      </field> 
-    </record>
-    
+          <separator string="oki"/>
 
-    <!-- server action to the one above -->
-    <!--
-    <record model="ir.actions.server" id="open.action_server">
-      <field name="name">open server</field>
-      <field name="model_id" ref="model_open_open"/>
-      <field name="state">code</field>
-      <field name="code">
+          <group col="2">
+            <group colspan="1">
+              <notebook>
+                <page string="Description">
+                  <field name="description"/>
+                </page>
+                <page string="About">                                This is an example of notebooks                            </page>
+              </notebook>
+            </group>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+
+  <!-- tree view -->
+  <record model="ir.ui.view" id="course_list_view">
+    <field name="name">course.list</field>
+    <field name="model">open.course</field>
+    <field name="arch" type="xml">
+      <search string="lista de cursos">
+        <field name="name" string="Nombre"/>
+        <field name="description" string="Descripcion"/>
+      </search>
+    </field>
+  </record>
+
+  <!-- search view -->
+  <record model="ir.ui.view" id="course_search_view">
+    <field name="name">course.search</field>
+    <field name="model">open.course</field>
+    <field name="arch" type="xml">
+      <tree string="lista de cursos">
+        <field name="name" string="Nombre"/>
+        <field name="description" string="Descripcion"/>
+      </tree>
+    </field>
+  </record>
+
+  <!-- actions opening views on models -->
+  <record id="course_list_action" model="ir.actions.act_window">
+    <field name="name">Courses</field>
+    <field name="res_model">open.course</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+      <p class="oe_view_nocontent_create">Create the first course</p>
+    </field>
+  </record>
+  <!-- server action to the one above -->
+  <!--
+    <record model="ir.actions.server" id="open.action_server"><field name="name">open server</field><field name="model_id" ref="model_open_open"/><field name="state">code</field><field name="code">
         action = {
           "type": "ir.actions.act_window",
           "view_mode": "tree,form",
           "res_model": self._name,
         }
-      </field>
-    </record>
+      </field></record>
     -->
-
-       
-    <menuitem id="main_open_menu" name="Open Academy" />
-    
-  
-    
-    <menuitem id="open_menu" name="Open Academy" parent="main_open_menu"/>
-
-
-    <menuitem id="courses_menu"  name="Courses" parent="open_menu" action="course_list_action"/> 
-    
-    <!-- actions -->
-    <!--
-    <menuitem name="List" id="open.menu_1_list" parent="open.menu_1"
-              action="open.action_window"/>
-    <menuitem name="Server to list" id="open" parent="open.menu_2"
-              action="open.action_server"/>
+  <menuitem id="main_open_menu" name="Open Academy" />
+  <menuitem id="open_menu" name="Open Academy" parent="main_open_menu"/>
+  <menuitem id="courses_menu" name="Courses" parent="open_menu" action="course_list_action"/>
+  <!-- actions -->
+  <!--
+    <menuitem name="List" id="open.menu_1_list" parent="open.menu_1" action="open.action_window"/><menuitem name="Server to list" id="open" parent="open.menu_2" action="open.action_server"/>
     -->
 </odoo>
