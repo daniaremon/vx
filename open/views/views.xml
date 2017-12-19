@@ -1,0 +1,62 @@
+<odoo>
+    <!-- explicit list view definition -->
+    
+    <!-- <record model="ir.ui.view" id="open_list">
+      <field name="name">Cursos</field>
+      <field name="model">open.course</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="description"/>
+        </tree>
+      </field>
+    </record> -->
+    
+
+    <!-- actions opening views on models -->
+    
+    <record id="course_list_action" model="ir.actions.act_window" >
+      <field name="name">Courses</field>
+      <field name="res_model">open.course</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">Create the first course</p>
+      </field> 
+    </record>
+    
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="open.action_server">
+      <field name="name">open server</field>
+      <field name="model_id" ref="model_open_open"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+       
+    <menuitem id="main_open_menu" name="Open Academy" />
+    
+  
+    
+    <menuitem id="open_menu" name="Open Academy" parent="main_open_menu"/>
+
+
+    <menuitem id="courses_menu"  name="Courses" parent="open_menu" action="course_list_action"/> 
+    
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="open.menu_1_list" parent="open.menu_1"
+              action="open.action_window"/>
+    <menuitem name="Server to list" id="open" parent="open.menu_2"
+              action="open.action_server"/>
+    -->
+</odoo>
