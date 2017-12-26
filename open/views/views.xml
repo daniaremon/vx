@@ -1,5 +1,11 @@
 <odoo>
-  <!-- explicit list view definition -->
+
+
+
+  <!-- COURSE -->
+
+
+
   <record model="ir.ui.view" id="course_form_view">
     <field name="name">course.form</field>
     <field name="model">open.course</field>
@@ -8,18 +14,18 @@
         <sheet>
           <group col="4">
             <!-- divide el ancho total en n col iguales-->
-            <group col="6" colspan="3">
+            <group colspan="1">
+            </group>
+            <group col="2" colspan="2">
               <!--colspan =3 indica que de las 4 col indicadas en el group externo, -->
-              <field name="name" colspan="3"/>
-              <field name="description" colspan="3"/>
-              <field name="description" colspan="6"/>
+              <field name="name" colspan="2"/>
+              <field name="description" colspan="2"/>
             </group>
           </group>
           
           <group col="4">
-            <group col="2" colspan="1">
-              <field name="name"/>
-              <field name="description"/>
+            <group col="2" colspan="2">
+              <field name="responsible_id"/>
             </group>
           </group>
 
@@ -31,7 +37,19 @@
                 <page string="Description">
                   <field name="description"/>
                 </page>
-                <page string="About">                                This is an example of notebooks                            </page>
+                <page string="About">
+                  This is an example of notebooks
+                </page>
+
+                    <page string="Sessions ok">
+                        <field name="session_ids" nolabel="1">
+                          <tree string="registered session">
+                            <field name="name"/>
+                            <field name="instructor_id"/>
+                          </tree>
+                        </field>
+                    </page>
+
               </notebook>
             </group>
           </group>
@@ -40,7 +58,6 @@
     </field>
   </record>
 
-
   <!-- tree view -->
   <record model="ir.ui.view" id="course_list_view">
     <field name="name">course.list</field>
@@ -48,7 +65,7 @@
     <field name="arch" type="xml">
       <search string="lista de cursos">
         <field name="name" string="Nombre"/>
-        <field name="description" string="Descripcion"/>
+        <field name="responsible_id" string="Responsable"/>
       </search>
     </field>
   </record>
@@ -75,21 +92,82 @@
       <p class="oe_view_nocontent_create">Create the first course</p>
     </field>
   </record>
-  <!-- server action to the one above -->
-  <!--
-    <record model="ir.actions.server" id="open.action_server"><field name="name">open server</field><field name="model_id" ref="model_open_open"/><field name="state">code</field><field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": self._name,
-        }
-      </field></record>
-    -->
+
+  <!-- menu -->
+
   <menuitem id="main_open_menu" name="Open Academy" />
   <menuitem id="open_menu" name="Open Academy" parent="main_open_menu"/>
   <menuitem id="courses_menu" name="Courses" parent="open_menu" action="course_list_action"/>
-  <!-- actions -->
-  <!--
-    <menuitem name="List" id="open.menu_1_list" parent="open.menu_1" action="open.action_window"/><menuitem name="Server to list" id="open" parent="open.menu_2" action="open.action_server"/>
-    -->
+
+
+
+
+
+<!-- SESSION -->
+
+
+
+
+  <!-- session form view -->
+    <record model="ir.ui.view" id="session_form_view">
+        <field name="name">session.form</field>
+        <field name="model">open.session</field>
+        <field name="arch" type="xml">
+            <form string="Session Form">
+              <sheet>
+                <group col="4">
+                    <group colspan="2" string="General">
+                        <field name="course_id"/>
+                        <field name="name"/>
+                        <field name="instructor_id"/>
+                    </group>
+                    <group colspan="2">
+                    </group>
+                    <group colspan="2" string="Horario">
+                        <field name="start_date"/>
+                        <field name="duration"/>
+                        <sfield name="seats"/>
+                    </group> 
+                </group>
+
+                <group col="4">
+                    <group colspan="3">
+                        <label for="attendee_ids"/>
+                        <field name="attendee_ids" nolabel="1">
+                          <tree string="asistentes">
+                            <field name="name"/>
+                            <field name="email"/>
+                          </tree>
+                        </field>
+                    </group>   
+
+                </group>
+              </sheet>
+            </form>
+        </field>
+    </record>
+
+        <!-- session tree/list view -->
+        <record model="ir.ui.view" id="session_tree_view">
+            <field name="name">session.tree</field>
+            <field name="model">open.session</field>
+            <field name="arch" type="xml">
+                <tree string="Session Tree">
+                    <field name="name"/>
+                    <field name="course_id"/>
+                </tree>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="session_list_action">
+        <field name="name">Sessions</field>
+        <field name="res_model">open.session</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="session_menu" name="Sessions" parent="open_menu" action="session_list_action"/>
+
+
+
 </odoo>
