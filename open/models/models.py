@@ -2,6 +2,15 @@
 
 from odoo import models, fields, api
 
+class Padre(models.Model):
+    _name = 'open.padre'
+
+    name = fields.Char(string="Nombre")
+    edad = fields.Integer(string="Edad")
+    fecha = fields.Date(string="Fecha de Nacimiento")
+    altura = fields.Float(digits=(4, 2), help="Altura en metros")
+
+
 class Course(models.Model):
     _name = 'open.course'
 
@@ -34,7 +43,8 @@ class Session(models.Model):
 
     instructor_id = fields.Many2one(
         'res.partner',
-        string="Instructor"
+        string="Instructor",
+        domain=['|', ('instructor','=',True), ('category_id.name','ilike','Teacher')]
     )
 
     course_id = fields.Many2one(

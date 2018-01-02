@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
 
@@ -168,6 +169,48 @@
 
     <menuitem id="session_menu" name="Sessions" parent="open_menu" action="session_list_action"/>
 
+
+
+    <!-- PADRE -->
+
+
+    <record model="ir.ui.view" id="padre_form_view">
+        <field name="name">padre.form</field>
+        <field name="model">open.padre</field>
+        <field name="arch" type="xml">
+            <form string="Padre Form">
+              <sheet>
+                <field name="name"/>
+                <field name="edad"/>
+                <field name="fecha"/>
+                <field name="altura"/>
+              </sheet>
+            </form>
+        </field>
+    </record>
+
+        <!-- session tree/list view -->
+        <record model="ir.ui.view" id="padre_tree_view">
+            <field name="name">padre.tree</field>
+            <field name="model">open.padre</field>
+            <field name="arch" type="xml">
+                <tree string="Padre Tree">
+                    <field name="name" string="Nombre"/>
+                    <field name="edad" string="Edad"/>
+                    <field name="fecha" string="Fecha de Nac."/>
+                    <field name="altura" string="Alt. en m"/>
+                </tree>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="padre_list_action">
+        <field name="name">Padre</field>
+        <field name="res_model">open.padre</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="padre_menu" name="Padre" parent="open_menu" action="padre_list_action"/>
 
 
 </odoo>
