@@ -67,6 +67,7 @@
       <search string="lista de cursos">
         <field name="name" string="Nombre"/>
         <field name="responsible_id" string="Responsable"/>
+         <filter name="oki" icon="terp-go-week" string="Nombre" domain="[]" context="{'group_by':'name'}"/>
       </search>
     </field>
   </record>
@@ -92,6 +93,7 @@
     <field name="help" type="html">
       <p class="oe_view_nocontent_create">Create the first course</p>
     </field>
+    <field name="context">{"search_default_oki":1}</field>
   </record>
 
   <!-- menu -->
@@ -126,8 +128,10 @@
                     </group>
                     <group colspan="2" string="Horario">
                         <field name="start_date"/>
+                        <field name="datetime_test"/>
                         <field name="duration"/>
-                        <sfield name="seats"/>
+                        <field name="seats"/>
+                        <field name="taken_seats" widget="progressbar"/>
                     </group> 
                 </group>
 
@@ -135,6 +139,7 @@
                     <group colspan="3">
                         <label for="attendee_ids"/>
                         <field name="attendee_ids" nolabel="1">
+                        <field name="active"/>
                           <tree string="asistentes">
                             <field name="name"/>
                             <field name="email"/>
@@ -156,6 +161,7 @@
                 <tree string="Session Tree">
                     <field name="name"/>
                     <field name="course_id"/>
+                    <field name="taken_seats" widget="progressbar"/>
                 </tree>
             </field>
         </record>
