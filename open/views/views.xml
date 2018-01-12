@@ -206,7 +206,7 @@
                     <field name="fecha" string="Fecha de Nac."/>
                     <field name="altura" string="Alt. en m"/>
                 </tree>
-            </field>
+            </field>          
         </record>
 
     <record model="ir.actions.act_window" id="padre_list_action">
