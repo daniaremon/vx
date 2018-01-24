@@ -158,9 +158,13 @@
             <field name="name">session.tree</field>
             <field name="model">open.session</field>
             <field name="arch" type="xml">
-                <tree string="Session Tree">
+                <tree string="Session Tree" colors="blue:duration&lt;5;red:duration&gt;15">
                     <field name="name"/>
+                    <field name="instructor_id"/>
+                    <field name="seats"/>
+                    <field name="start_date"/>
                     <field name="course_id"/>
+                    <field name="duration"/>
                     <field name="taken_seats" widget="progressbar"/>
                 </tree>
             </field>
