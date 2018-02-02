@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api, exceptions
+from datetime import timedelta
 import time
 
 class Padre(models.Model):
@@ -101,6 +102,47 @@ class Session(models.Model):
     #no en todos los casos se debe usar strore=True porque hay casos en los que solo se reuqiere ese momento, dependiendo el caso pueden entrar 2 usuario y querer grabar al mismo tiempo y pueden dar problemas, como en inventario
 
     active = fields.Boolean(default=True) #campo reservado igual que name
+    end_date = fields.Date(store=True, compute='_get_end_date')
+    attendees_count = fields.Integer(
+        string="Attendees count", compute='_get_attendees_count', store=True)
+    color = fields.Integer()
+
+    hours = fields.Float(string="Duration in hours",
+                         compute='_get_hours', inverse='_set_hours')
+
+
+    @api.depends('duration')
+    def _get_hours(self):
+        for r in self:
+            r.hours = r.duration * 24
+
+    def _set_hours(self):
+        for r in self:
+            r.duration = r.hours / 24
+            
+    @api.depends('attendee_ids')
+    def _get_attendees_count(self):
+        for r in self:
+            r.attendees_count = len(r.attendee_ids)
+
+    @api.depends('start_date', 'duration')
+    def _get_end_date(self):
+        #import pdb; pdb.set_trace()
+        for record in self.filtered('start_date'):
+            start_date = fields.Datetime.from_string(record.start_date)
+            record.end_date = start_date + timedelta(days=record.duration, seconds=-1)
+
+
+    def _set_end_date(self):
+        for r in self:
+            if not (r.start_date and r.end_date):
+                continue
+            # Compute the difference between dates, but: Friday - Monday = 4 days,
+            # so add one day to get 5 days instead
+            start_date = fields.Datetime.from_string(r.start_date)
+            end_date = fields.Datetime.from_string(r.end_date)
+            r.duration = (end_date - start_date).days + 1
+
 
     @api.depends('seats', 'attendee_ids')
     def _taken_seats(self):

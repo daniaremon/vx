@@ -59,8 +59,8 @@
     </field>
   </record>
 
-  <!-- tree view -->
-  <record model="ir.ui.view" id="course_list_view">
+  <!-- search view -->
+  <record model="ir.ui.view" id="course_search_view">
     <field name="name">course.list</field>
     <field name="model">open.course</field>
     <field name="arch" type="xml">
@@ -68,12 +68,18 @@
         <field name="name" string="Nombre"/>
         <field name="responsible_id" string="Responsable"/>
          <filter name="oki" icon="terp-go-week" string="Nombre" domain="[]" context="{'group_by':'name'}"/>
+
+        <filter name="my_courses" string="My Courses" domain="[('responsible_id', '=', uid)]"/>
+        <group string="Group By">
+            <filter name="by_responsible" string="Responsible"
+                    context="{'group_by': 'responsible_id'}"/>
+        </group>
       </search>
     </field>
   </record>
 
-  <!-- search view -->
-  <record model="ir.ui.view" id="course_search_view">
+  <!-- tree view -->
+  <record model="ir.ui.view" id="course_tree_view">
     <field name="name">course.search</field>
     <field name="model">open.course</field>
     <field name="arch" type="xml">
@@ -93,7 +99,8 @@
     <field name="help" type="html">
       <p class="oe_view_nocontent_create">Create the first course</p>
     </field>
-    <field name="context">{"search_default_oki":1}</field>
+    <!-- <field name="context">{"search_default_oki":1}</field> -->
+    <field name="context">{"search_default_my_courses":1}</field>
   </record>
 
   <!-- menu -->
@@ -111,7 +118,7 @@
 
 
 
-  <!-- session form view -->
+    <!-- session form view -->
     <record model="ir.ui.view" id="session_form_view">
         <field name="name">session.form</field>
         <field name="model">open.session</field>
@@ -120,14 +127,15 @@
               <sheet>
                 <group col="4">
                     <group colspan="2" string="General">
-                        <field name="course_id"/>
+                        <field name="course_id" options="{'no_create':True,'no_open':True}"/>
                         <field name="name"/>
-                        <field name="instructor_id"/>
+                        <field name="instructor_id" widget="selection"/>
                     </group>
                     <group colspan="2">
                     </group>
                     <group colspan="2" string="Horario">
                         <field name="start_date"/>
+                        <field name="end_date"/>
                         <field name="datetime_test"/>
                         <field name="duration"/>
                         <field name="seats"/>
@@ -153,28 +161,128 @@
         </field>
     </record>
 
-        <!-- session tree/list view -->
-        <record model="ir.ui.view" id="session_tree_view">
-            <field name="name">session.tree</field>
-            <field name="model">open.session</field>
-            <field name="arch" type="xml">
-                <tree string="Session Tree" colors="blue:duration&lt;5;red:duration&gt;15">
-                    <field name="name"/>
-                    <field name="instructor_id"/>
-                    <field name="seats"/>
-                    <field name="start_date"/>
-                    <field name="course_id"/>
-                    <field name="duration"/>
-                    <field name="taken_seats" widget="progressbar"/>
-                </tree>
-            </field>
-        </record>
+    <!-- session tree/list view -->
+    <record model="ir.ui.view" id="session_tree_view">
+        <field name="name">session.tree</field>
+        <field name="model">open.session</field>
+        <field name="arch" type="xml">              
+            <tree string="Session Tree" decoration-primary="duration&lt;5" decoration-warning="duration&gt;15">  
+                  <!-- editable = "top" o "bottom" sirve para que las filas sean editables en el tree view, y top, bottom indica el lugar de aparición del ingreso de un registro al crearlo, puede ser arriba o abajo de la lista -->
+                  <!-- create="false" delete="false" -->
+                <field name="name"/>
+                <field name="instructor_id"/>
+                <field name="seats"/>
+                <field name="start_date"/>
+                <field name="course_id"/>
+                <field name="duration" invisible="1"/>
+                <field name="taken_seats" widget="progressbar"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- calendar view -->
+    <record model="ir.ui.view" id="session_calendar_view">
+        <field name="name">session.calendar</field>
+        <field name="model">open.session</field>
+        <field name="arch" type="xml">
+            <calendar string="Session Calendar" date_start="start_date" date_stop="end_date" color="instructor_id">
+                <field name="name"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- graph view -->
+    <record model="ir.ui.view" id="session_graph_view">
+        <field name="name">open.session.graph</field>
+        <field name="model">open.session</field>
+        <field name="arch" type="xml">
+            <graph string="Participations by Courses">
+                <field name="course_id" type="row"/>
+                <field name="attendees_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- kanban view -->
+    <record model="ir.ui.view" id="session_kanban_view">
+        <field name="name">open.session.kanban</field>
+        <field name="model">open.session</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="instructor_id">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div
+                                t-attf-class="oe_kanban_color_{{kanban_getcolor(record.color.raw_value)}}
+                                              oe_kanban_global_click_edit oe_semantic_html_override
+                                              oe_kanban_card {{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}}">
+                            <div class="oe_dropdown_kanban">
+                                <!-- dropdown menu -->
+                                <div class="oe_dropdown_toggle">
+                                    <i class="fa fa-bars fa-lg"/>
+                                    <ul class="oe_dropdown_menu">
+                                        <li>
+                                            <a type="delete">Delete</a>
+                                        </li>
+                                        <li>
+                                            <ul class="oe_kanban_colorpicker"
+                                                data-field="color"/>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                            <div t-attf-class="oe_kanban_content">
+                                <!-- title -->
+                                Session name:
+                                <field name="name"/>
+                                <br/>
+                                Start date:
+                                <field name="start_date"/>
+                                <br/>
+                                duration:
+                                <field name="duration"/>
+                                <br/>
+                                Instructoooor:
+                                <field name="instructor_id"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- gantt view 10.0 -->
+    <!-- <record model="ir.ui.view" id="session_gantt_view">
+        <field name="name">session.gantt</field>
+        <field name="model">openacademy.session</field>
+        <field name="arch" type="xml">
+            <gantt string="Session Gantt" color="course_id"
+                    date_start="start_date" date_delay="hours"
+                    default_group_by='instructor_id'>
+                <field name="name"/>
+            </gantt>
+        </field>
+    </record> -->
+
+    <!-- gantt view 11.0 -->
+    <!-- <record model="ir.ui.view" id="session_gantt_view">
+        <field name="name">session.gantt</field>
+        <field name="model">open.session</field>
+        <field name="arch" type="xml">
+            <gantt string="Session Gantt"
+                    date_start="start_date"
+                    default_group_by='instructor_id' date_stop="end_date">
+            </gantt>
+        </field>
+    </record> -->
 
     <record model="ir.actions.act_window" id="session_list_action">
         <field name="name">Sessions</field>
         <field name="res_model">open.session</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,calendar,graph,kanban</field>
     </record>
 
     <menuitem id="session_menu" name="Sessions" parent="open_menu" action="session_list_action"/>
