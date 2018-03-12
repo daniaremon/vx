@@ -85,6 +85,7 @@
     <field name="arch" type="xml">
       <tree string="lista de cursos">
         <field name="name" string="Nombre"/>
+        <field name="responsible_id" string="Responsable"/>
         <field name="description" string="Descripcion"/>
       </tree>
     </field>
