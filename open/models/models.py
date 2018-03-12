@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api, exceptions
+from odoo import models, fields, api, exceptions, _
 from datetime import timedelta
 import time
 
@@ -56,12 +56,12 @@ class Course(models.Model):
         default = dict(default or {})
 
         copied_count = self.search_count(
-            [('name', 'ilike', u"Copy of {}%".format(self.name))])
+            [('name', 'ilike', _(u"Copy of {}%").format(self.name))])
 
         if not copied_count:
-            new_name = u"Copy of {}".format(self.name)
+            new_name = _(u"Copy of {}").format(self.name)
         else:
-            new_name = u"Copy of {} ({})".format(self.name, copied_count)
+            new_name = _(u"Copy of {} ({})").format(self.name, copied_count)
 
         default['name'] = new_name
         # try:
@@ -162,16 +162,16 @@ class Session(models.Model):
             self.active = False
             return{
                 'warning':{
-                    'tittle': "Incorrect 'seats' value",
-                    'message': "The number of available seats may not be negative",
+                    'tittle': _("Incorrect 'seats' value"),
+                    'message': _("The number of available seats may not be negative"),
                 }
              }
         if self.seats<len(self.attendee_ids):
             self.active=False
             return{
                 'warning':{
-                    'tittle': "Too many attendees",
-                    'message': "Invrease seats or remove attendees excess",
+                    'tittle': _("Too many attendees"),
+                    'message': _("Invrease seats or remove attendees excess"),
                 }
             }
         self.active = True
@@ -182,6 +182,6 @@ class Session(models.Model):
         for record in self.filtered('instructor_id'): #filtered permite predicate function, un campo bool escrito entre "" , y un campo '' cualquiera para qeu verifique si existe 
             if record.instructor_id in record.attendee_ids:
                 raise exceptions.ValidationError(
-                        "A sessio's instructor can't be an attendee") #necesita import exceptions .. esto se encuentra en exceptions.py
+                        _("A sessio's instructor can't be an attendee")) #necesita import exceptions .. esto se encuentra en exceptions.py
 
     
