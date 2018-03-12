@@ -332,4 +332,43 @@
     <menuitem id="padre_menu" name="Padre" parent="open_menu" action="padre_list_action"/>
 
 
+
+
+
+
+
+
+    <!-- wizaaaaard -->
+
+        <record model="ir.ui.view" id="wizard_form_view">
+            <field name="name">wizard.form</field>
+            <field name="model">open.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Add Attendees">
+                    <group>
+                        <field name="session_ids"/>
+                        <field name="attendee_ids"/>
+                    </group>
+                    <footer>
+                        <!-- un boton tipo object, debe tener un metodo con el nombre de name 
+                        en el modelo correspondiente, en este caso "subscribe" en "open.wizard"  -->
+                        <button name="subscribe" type="object"
+                                string="Subscribe" class="oe_highlight"/>
+                         or
+                        <button special="cancel" string="Cancel"/>
+                        <!-- este no necesita el metodo en el modelo, pues "special" ya tiene uno por defecto -->
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="launch_session_wizard"
+                    name="Add Attendees"
+                    src_model="open.session"
+                    res_model="open.wizard"
+                    view_mode="form"
+                    target="new"
+                    key2="client_action_multi"/> <!-- puede ejecutarse en varis registros de la fuente: src_model -->
+                    
+
 </odoo>

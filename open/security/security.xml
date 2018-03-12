@@ -14,7 +14,6 @@
             <field name="domain_force">
                 ['|',('responsible_id','=',False),
                      ('responsible_id','=',user.id)]
-            </field>
-
+            </field>            
         </record>
 </odoo>
